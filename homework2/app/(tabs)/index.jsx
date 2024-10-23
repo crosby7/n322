@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
 import { Button } from "react-native-paper"
 import { Colors } from "@/constants/Colors"
@@ -19,8 +19,10 @@ export default function index() {
     }
   }
   return (
-    <View>
-      <Text>Home</Text>
+    <View style={styles.container}>
+      <Text style={styles.homeText}>Home</Text>
+      <Image style={styles.img} source={require("./../../assets/images/dev-workshop-logo.png")} />
+      <Text>Welcome. Use the tabs at the bottom to navigate to lessons.</Text>
       <Button style={styles.btn} mode="outlined" onPress={handleSignOut}>
         <Text style={styles.whiteText}>Sign Out</Text>
       </Button>
@@ -36,13 +38,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20
   },
+  homeText: {
+    fontSize: 20,
+    textAlign: 'center'
+  },
+  img: {
+    width: 300,
+    height: 300,
+    marginVertical: 20
+  },
+  midText: {
+    textAlign: 'center'
+  },
   btn: {
     backgroundColor: Colors.DEV_PRIMARY,
     color: "#fff",
-    padding: 20,
+    padding: 10,
     borderRadius: 50,
     marginTop: 50,
-    width: "100%"
+    width: "50%"
   },
   whiteText: {
     color: "#fff",
