@@ -5,7 +5,6 @@ export default function TabOneScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to Productivity Focus</Text>
-      <View style={styles.separator} />
       <Image
         source={require("../../assets/images/trophy.png")}
         style={styles.logo}

@@ -30,7 +30,14 @@ export default function index() {
 
   const signIn = async () => {
     try {
-      const user = await signInWithEmailAndPassword(auth, email, password);
+      console.log("signing in:", email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      setUser(userCredential.user);
+      console.log("user signed in: ", userCredential.user);
       if (user) router.replace("/(tabs)");
     } catch (error) {
       console.log(error);
@@ -40,7 +47,13 @@ export default function index() {
 
   const signUp = async () => {
     try {
-      const user = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      setUser(userCredential.user);
+      console.log("user signed in: ", userCredential.user);
       if (user) router.replace("/(tabs)");
     } catch (error) {
       console.log(error);
@@ -140,7 +153,6 @@ const styles = StyleSheet.create({
   button: {
     width: 150,
     backgroundColor: Colors.site.tint,
-    borderColor: Colors.site.tint,
   },
   darkText: {
     color: Colors.site.text,

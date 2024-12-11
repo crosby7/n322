@@ -23,5 +23,6 @@ export default {
     tabIconDefault: "#000",
     tabIconSelected: "#00aa77",
     inputs: "#70FFD4",
+    cards: "#DDA448",
   },
 };

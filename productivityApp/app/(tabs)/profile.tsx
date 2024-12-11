@@ -1,8 +1,7 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigation } from "expo-router";
-import { Text, View } from "@/components/Themed";
 import Colors from "@/constants/Colors";
 
 export default function TabOneScreen() {
@@ -21,14 +20,16 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <Button mode="contained" onPress={runSignOut}>
-        <Text>Sign Out</Text>
+      <Text style={styles.title}>How Productive Have I Been Today?</Text>
+      <View style={styles.stats}>
+        <Text style={styles.statsText}>Tasks Remaining:</Text>
+        <Text style={styles.statistics}></Text>
+        <Text style={styles.statsText}>Tasks Completed:</Text>
+        <Text style={styles.statistics}></Text>
+      </View>
+      <Text style={styles.subHeader}>All Finished?</Text>
+      <Button style={styles.button} mode="contained" onPress={runSignOut}>
+        <Text style={styles.btnText}>Sign Out</Text>
       </Button>
     </View>
   );
@@ -46,9 +47,33 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: Colors.site.text,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
+  stats: {
+    height: 110,
+    justifyContent: "space-between",
+    marginBottom: 40,
+    marginTop: 10,
+  },
+  statsText: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  statistics: {
+    marginTop: 5,
+    width: 50,
+    marginHorizontal: "auto",
+    height: 50,
+    backgroundColor: Colors.site.cards,
+    borderRadius: 5,
+  },
+  subHeader: {
+    fontWeight: "500",
+    marginBottom: 10,
+    fontSize: 14,
+  },
+  button: {
+    backgroundColor: Colors.site.tint,
+  },
+  btnText: {
+    color: Colors.site.text,
   },
 });
