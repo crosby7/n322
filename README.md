@@ -32,6 +32,7 @@ To run this project:
 - Alternatively, you can download all files and use the terminal to cd into homework2. From there the npm scripts will run as intended
 
 ---
+---
 
 ## Past Homeworks
 
