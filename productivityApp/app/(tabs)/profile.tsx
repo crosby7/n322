@@ -1,12 +1,42 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { getAuth, signOut } from "firebase/auth";
-import { useNavigation } from "expo-router";
+import { useFocusEffect, useNavigation } from "expo-router";
 import Colors from "@/constants/Colors";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../FirebaseConfig";
+import React from "react";
 
-export default function TabOneScreen() {
+export default function Profile() {
+  const [remainingTasks, setRemainingTasks] = React.useState(0);
+
   const navigation = useNavigation();
   const auth = getAuth();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+
+      const checkRemainingTasks = async () => {
+        try {
+          const querySnapshot = await getDocs(collection(db, "ReactUser"));
+
+          if (isActive) {
+            setRemainingTasks(querySnapshot.size); // returns the count of docs
+          }
+        } catch (e) {
+          console.error("error getting remaining tasks: ", e.message);
+        }
+      };
+
+      checkRemainingTasks();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
   const runSignOut = async () => {
     try {
       await signOut(auth).then(() => {
@@ -23,9 +53,10 @@ export default function TabOneScreen() {
       <Text style={styles.title}>How Productive Have I Been Today?</Text>
       <View style={styles.stats}>
         <Text style={styles.statsText}>Tasks Remaining:</Text>
-        <Text style={styles.statistics}></Text>
-        <Text style={styles.statsText}>Tasks Completed:</Text>
-        <Text style={styles.statistics}></Text>
+        <Text style={styles.statistics}>{remainingTasks}</Text>
+        <Text style={styles.statsText}>
+          Thanks for your hard work today! You did great!
+        </Text>
       </View>
       <Text style={styles.subHeader}>All Finished?</Text>
       <Button style={styles.button} mode="contained" onPress={runSignOut}>
@@ -56,6 +87,7 @@ const styles = StyleSheet.create({
   statsText: {
     fontSize: 14,
     fontWeight: "500",
+    textAlign: "center",
   },
   statistics: {
     marginTop: 5,
@@ -64,6 +96,10 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: Colors.site.cards,
     borderRadius: 5,
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+    lineHeight: 50,
   },
   subHeader: {
     fontWeight: "500",

@@ -2,7 +2,15 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { useEffect, useState } from "react";
 import { auth, db } from "../../FirebaseConfig";
-import { collection, addDoc, getDocs, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  onSnapshot,
+  updateDoc,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
 import Colors from "../../constants/Colors";
 
 export default function TabTwoScreen() {
@@ -52,12 +60,34 @@ export default function TabTwoScreen() {
     }
   };
 
-  const updateTask = async () => {
-    console.log("Update task");
+  const updateTask = async (taskId) => {
+    console.log("update id: ", taskId);
+    const taskRef = doc(db, "ReactUser", taskId);
+    const updatedTask = {
+      name: taskName,
+      assigned: taskAssigned,
+    };
+
+    try {
+      await updateDoc(taskRef, updatedTask);
+      console.log("Document updated with ID:", taskId);
+      showTasks();
+    } catch (e) {
+      console.error("Error updating document: ", e.message);
+    }
   };
 
-  const deleteTask = async () => {
-    console.log("Delete task");
+  const deleteTask = async (taskId) => {
+    console.log("Delete task: ", taskId);
+    const taskRef = doc(db, "ReactUser", taskId);
+
+    try {
+      await deleteDoc(taskRef);
+      console.log("Document deleted with ID:", taskId);
+      showTasks();
+    } catch (e) {
+      console.error("Error deleting document: ", e.message);
+    }
   };
 
   return (
@@ -85,8 +115,15 @@ export default function TabTwoScreen() {
         </Button>
       </View>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={data}
         keyExtractor={(item) => item.id}
+        ListHeaderComponent={
+          <View style={styles.aligned}>
+            <Text style={styles.listTitle}>Tasks</Text>
+            <Text>Fill out the inputs and select update to edit!</Text>
+          </View>
+        }
         renderItem={({ item }) => (
           <View style={styles.card}>
             <Text style={styles.cardText}>{item.name}</Text>
@@ -97,14 +134,14 @@ export default function TabTwoScreen() {
               <Button
                 style={styles.update}
                 mode="contained"
-                onPress={updateTask}
+                onPress={() => updateTask(item.id)}
               >
                 <Text style={styles.btnText}>Update</Text>
               </Button>
               <Button
                 style={styles.cancel}
                 mode="contained"
-                onPress={deleteTask}
+                onPress={() => deleteTask(item.id)}
               >
                 <Text style={styles.btnText}>Complete</Text>
               </Button>
@@ -154,6 +191,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.site.cards,
     borderRadius: 10,
     marginTop: 20,
+    borderColor: "#000",
+    borderWidth: 1,
   },
   cardText: {
     marginVertical: 5,
@@ -179,5 +218,13 @@ const styles = StyleSheet.create({
   },
   btnText: {
     color: Colors.site.text,
+  },
+  aligned: {
+    alignItems: "center",
+  },
+  listTitle: {
+    fontSize: 18,
+    marginBottom: 5,
+    fontWeight: "500",
   },
 });
