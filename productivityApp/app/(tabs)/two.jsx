@@ -3,6 +3,7 @@ import { Button, TextInput } from "react-native-paper";
 import { useEffect, useState } from "react";
 import { auth, db } from "../../FirebaseConfig";
 import { collection, addDoc, getDocs, onSnapshot } from "firebase/firestore";
+import Colors from "../../constants/Colors";
 
 export default function TabTwoScreen() {
   const [taskName, setTaskName] = useState("");
@@ -22,7 +23,7 @@ export default function TabTwoScreen() {
   }, []);
 
   const addTask = async () => {
-    console.log(taskName, taskDueDate);
+    console.log(taskName, taskAssigned);
     console.log(auth.currentUser);
     const taskObj = {
       name: taskName,
@@ -51,6 +52,14 @@ export default function TabTwoScreen() {
     }
   };
 
+  const updateTask = async () => {
+    console.log("Update task");
+  };
+
+  const deleteTask = async () => {
+    console.log("Delete task");
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Office Tasks</Text>
@@ -67,25 +76,39 @@ export default function TabTwoScreen() {
         placeholder="Assigned to:"
         onChangeText={(text) => setTaskAssigned(text)}
       />
-      <Button style={styles.button} mode="contained" onPress={addTask}>
-        Add Task
-      </Button>
-      <Button style={styles.button} mode="contained" onPress={showTasks}>
-        View All Tasks
-      </Button>
+      <View style={styles.mainButtons}>
+        <Button style={styles.button} mode="contained" onPress={addTask}>
+          <Text style={styles.btnText}>Add Task</Text>
+        </Button>
+        <Button style={styles.button} mode="contained" onPress={showTasks}>
+          <Text style={styles.btnText}>View All Tasks</Text>
+        </Button>
+      </View>
       <FlatList
         data={data}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Text>{item.name}</Text>
-            <Text>{item.assigned}</Text>
-            <Button style={styles.button} mode="contained" onPress={updateTask}>
-              <Text style={styles.btnText}>Update Task</Text>
-            </Button>
-            <Button style={styles.button} mode="contained" onPress={deleteTask}>
-              <Text style={styles.btnText}>Delete Task</Text>
-            </Button>
+            <Text style={styles.cardText}>{item.name}</Text>
+            <Text style={styles.cardText}>
+              Assigned to: <Text style={styles.assigned}>{item.assigned}</Text>
+            </Text>
+            <View style={styles.cardBtns}>
+              <Button
+                style={styles.update}
+                mode="contained"
+                onPress={updateTask}
+              >
+                <Text style={styles.btnText}>Update</Text>
+              </Button>
+              <Button
+                style={styles.cancel}
+                mode="contained"
+                onPress={deleteTask}
+              >
+                <Text style={styles.btnText}>Complete</Text>
+              </Button>
+            </View>
           </View>
         )}
       />
@@ -98,22 +121,63 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: Colors.site.background,
   },
   title: {
     fontSize: 20,
+    marginTop: 60,
     fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 2,
-    width: "80%",
-  },
-  button: {
-    marginTop: 20,
   },
   nameInput: {
     height: 40, // Make the input box height more standard
     width: "80%", // Add width to make it easier to type into
     marginVertical: 10,
+    backgroundColor: Colors.site.inputs,
+    color: Colors.site.text,
+    borderColor: Colors.site.tint,
+  },
+  mainButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "80%",
+    marginVertical: 10,
+  },
+  cardBtns: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 40,
+    paddingHorizontal: 10,
+  },
+  card: {
+    width: 300,
+    height: 140,
+    backgroundColor: Colors.site.cards,
+    borderRadius: 10,
+    marginTop: 20,
+  },
+  cardText: {
+    marginVertical: 5,
+    paddingLeft: 10,
+    color: Colors.site.text,
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  assigned: {
+    fontWeight: "200",
+  },
+  update: {
+    backgroundColor: Colors.site.tint,
+    width: 115,
+  },
+  cancel: {
+    backgroundColor: Colors.site.error,
+    width: 115,
+  },
+  button: {
+    backgroundColor: Colors.site.tint,
+    marginTop: 20,
+  },
+  btnText: {
+    color: Colors.site.text,
   },
 });

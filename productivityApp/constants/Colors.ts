@@ -24,5 +24,6 @@ export default {
     tabIconSelected: "#00aa77",
     inputs: "#70FFD4",
     cards: "#DDA448",
+    error: "#EC7357",
   },
 };
